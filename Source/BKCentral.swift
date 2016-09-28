@@ -71,7 +71,7 @@ public class BKCentral: BKPeer, BKCBCentralManagerStateDelegate, BKConnectionPoo
     /// Bluetooth LE availability, derived from the underlying CBCentralManager.
     public var availability: BKAvailability? {
         if let centralManager = _centralManager {
-            return BKAvailability(centralManagerState: centralManager.state)
+            return BKAvailability(centralManagerState: CBCentralManagerState(rawValue: centralManager.state.rawValue) ?? .Unknown)
         } else {
             return nil
         }
@@ -278,7 +278,7 @@ public class BKCentral: BKPeer, BKCBCentralManagerStateDelegate, BKConnectionPoo
             case .Unknown, .Resetting:
                 break
             case .Unsupported, .Unauthorized, .PoweredOff:
-                let newCause = BKUnavailabilityCause(centralManagerState: central.state)
+                let newCause = BKUnavailabilityCause(centralManagerState: CBCentralManagerState(rawValue: central.state.rawValue) ?? .Unknown)
                 switch stateMachine.state {
                     case let .Unavailable(cause):
                         let oldCause = cause

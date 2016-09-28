@@ -53,7 +53,7 @@ public class BKPeripheral: BKPeer, BKCBPeripheralManagerDelegate, BKAvailability
     
     /// Bluetooth LE availability derived from the underlying CBPeripheralManager object.
     public var availability: BKAvailability {
-        return BKAvailability(peripheralManagerState: peripheralManager.state)
+        return BKAvailability(peripheralManagerState: CBPeripheralManagerState(rawValue: peripheralManager.state.rawValue) ?? .Unknown)
     }
     
     /// The configuration that the BKPeripheral object was started with.
@@ -180,7 +180,7 @@ public class BKPeripheral: BKPeer, BKCBPeripheralManagerDelegate, BKAvailability
         case .Unknown, .Resetting:
             break
         case .Unsupported, .Unauthorized, .PoweredOff:
-            let newCause = BKUnavailabilityCause(peripheralManagerState: peripheral.state)
+            let newCause = BKUnavailabilityCause(peripheralManagerState: CBPeripheralManagerState(rawValue: peripheral.state.rawValue) ?? .Unknown)
             switch stateMachine.state {
                 case let .Unavailable(cause):
                     let oldCause = cause
